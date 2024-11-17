@@ -1,0 +1,34 @@
+FROM node:18-alpine3.15
+
+ENV GLIBC_VER=2.33-r0
+
+RUN apk --no-cache add \
+        binutils \
+        curl \
+        zip
+RUN curl -sL https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub -o /etc/apk/keys/sgerrand.rsa.pub
+RUN curl -sLO https://github.com/sgerrand/alpine-pkg-glibc/releases/download/${GLIBC_VER}/glibc-${GLIBC_VER}.apk
+RUN curl -sLO https://github.com/sgerrand/alpine-pkg-glibc/releases/download/${GLIBC_VER}/glibc-bin-${GLIBC_VER}.apk
+RUN apk add --no-cache \
+        glibc-${GLIBC_VER}.apk \
+        glibc-bin-${GLIBC_VER}.apk
+RUN apk --no-cache del \
+        binutils
+RUN rm glibc-${GLIBC_VER}.apk
+RUN rm glibc-bin-${GLIBC_VER}.apk
+RUN rm -rf /var/cache/apk/*
+
+# RUN curl "https://d1vvhvl2y92vvt.cloudfront.net/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+# RUN unzip awscliv2.zip
+# RUN ./aws/install
+# RUN aws --version
+
+RUN npm install -g npm@8.19.2
+
+# Install Serverless Framework
+# RUN npm install -g serverless@3.31.0
+
+# RUN sls --version
+
+WORKDIR /app
+CMD tail -f /dev/null
